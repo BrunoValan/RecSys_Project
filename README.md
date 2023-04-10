@@ -15,9 +15,13 @@ b.listing_detail.csv: which contains specifics of the property, the amenities pr
 
 1. The reviews_detail.csv file contains only the natural text comments for each stay by the user. There is no numerical rating that this has been translated to. So we used the NLTK library and specifically the vader-lexicon to get a general senitment of the comment and respective decided a range of numerical rating.
 2. The vader-lexicon was used for the below reasons-
+
 a. It provided a zero-shot way of translating the text comments into a usable numerical value using sentiment analyser function.
+
 b. It evaluates using a "compound" score which takes into account the sarcasm in a comment and accurately returns the correct sentiment.
+
 c. This library has 75K weighted words, which worked reasonably well for us as users providing feedback seldom do so using complicated vocabulary.
+
 3. We then joined the reviews and the listings using the listing id to form the combined_fin.csv.
 4. In the listing file, there was just 1 column inclusing all the amenities, so we separeted those out using regex and 1 hot encoded them. This lead to a very sparse dataset, which is why we ended up taking the top 10 amenities that each listing offered. This was majorly created for the hybrid model that we planned to test.
 
