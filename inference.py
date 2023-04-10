@@ -12,21 +12,21 @@ import torch.optim as optim
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import train_test_split
 from model_file import NNHybridFiltering
+
 device = torch.device("cpu")
 def load_data():
-	df=pd.read_csv("reviews_airbnb.csv")
-	return (df)
-ratings=load_data()
-X=ratings.loc[:,['reviewer_id','id']] 
-def load_model(wt_file_path):
-	# import fine tuned model
-    X=load_data()
-    n_users = X.loc[:,'reviewer_id'].max()+1
-    n_items = X.loc[:,'id'].max()+1
-	model = NNHybridFiltering(n_users,n_items,embedding_dim_users=50, embedding_dim_items=50, n_activations = 100,rating_range=[0.,5.])
-	model=model.to(device)
-	model.load_state_dict(torch.load(wt_file_path))
-	return (model)
+    df=pd.read_csv("reviews_airbnb.csv")
+    return (df)
+ 
+def load_model(ratings,wt_file_path):
+    # import fine tuned model
+    #X=load_data()
+    n_users = ratings.loc[:,'reviewer_id'].max()+1
+    n_items = ratings.loc[:,'id'].max()+1
+    model = NNHybridFiltering(n_users,n_items,embedding_dim_users=50, embedding_dim_items=50,n_activations = 100,rating_range=[0.,5.])
+    model=model.to(device)
+    model.load_state_dict(torch.load(wt_file_path))
+    return (model)
     
 def predict_rating(model,reviewer_id,id, device):
     # Get predicted rating for a specific user-item pair from model
@@ -65,9 +65,11 @@ def generate_recommendations(ratings1,X,model,reviewer_id,device):
     return recs_names
 
 if __name__ == "__main__":
-	userId=1045
-    path='best_model_weights.pth'
-    model1=load_model(path)
+    ratings = load_data()
+    X = ratings.loc[:,['reviewer_id','id']]
+    userId=1045
+    path = 'best_model_weights.pth'
+    model1=load_model(ratings, path)
     recs = generate_recommendations(ratings,X,model1,userId,device)
     for i,rec in enumerate(recs):
         print('Recommendation {}: {}'.format(i,rec))
