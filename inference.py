@@ -17,18 +17,13 @@ def load_data():
 	df=pd.read_csv("reviews_airbnb.csv")
 	return (df)
 ratings=load_data()
-X=ratings.drop(columns='ratings')   
+X=ratings.loc[:,['reviewer_id','id']] 
 def load_model(wt_file_path):
 	# import fine tuned model
     X=load_data()
     n_users = X.loc[:,'reviewer_id'].max()+1
     n_items = X.loc[:,'id'].max()+1
-	model = NNHybridFiltering(n_users,
-                       n_items,
-                       embdim_users=50, 
-                       embdim_items=50,n_numerical_cols=16,
-                       n_activations = 100,
-                       rating_range=[0.,5.])
+	model = NNHybridFiltering(n_users,n_items,embedding_dim_users=50, embedding_dim_items=50, n_activations = 100,rating_range=[0.,5.])
 	model=model.to(device)
 	model.load_state_dict(torch.load(wt_file_path))
 	return (model)
