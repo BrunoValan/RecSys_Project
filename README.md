@@ -8,8 +8,17 @@ Using Airbnb's review data published for each year since 2018, provide a list of
 1. The data was sourced from the InsideAirbnb site which holds the entire data repository for all the cities that Airbnb is operational in.
 -http://insideairbnb.com/explore/
 2. The 2 files used here are- 
+
 a.reviews_detail.csv : which contains reviewer id, reviewer name, the listing id, the actual review comments in plain text 
+
 b.listing_detail.csv: which contains specifics of the property, the amenities provided for the stay, the rating accuracies, host descriptions, listing url etc.
+
+3. EDA showing the skewness of the data:
+
+![image](https://user-images.githubusercontent.com/110474064/231039384-5b7c67eb-419b-4494-87e7-d330b052b9f7.png)
+
+![image](https://user-images.githubusercontent.com/110474064/231039478-7803546d-fd0e-4d49-b234-11ac8f778727.png)
+
 
 ## Data manipulation:
 
@@ -28,8 +37,13 @@ c. This library has 75K weighted words, which worked reasonably well for us as u
 ## Models and Evaluation:
 
 Collaborative Filtering using NN: here we created reviewer and listing embeddings , used concatenation to retain info for both embeddings. This model perfomed the best in terms of train and validation loss and provided decent recommendations.
+
+![collab](https://user-images.githubusercontent.com/110474064/231039068-d7ba26d8-07b4-4ba2-8966-91bb61da8f23.jpeg)
+
 Hybrid Model: here we fed the amenities, rating accuracy, super host status, etc. to the model along with the reviewer and item embeddings. This model showed the most unstable training, took longer to train , took longer to infer and ended up providing nearly the same recommendations.
 This is why, for the final deployment we went ahead with the first approach.
+
+![hybrid](https://user-images.githubusercontent.com/110474064/231039106-22c17f89-a87e-4f32-8afd-4dfba628480e.jpeg)
 
 Note: the inference takes time with CPU and thus the streamlit implementation running using the most basic infrastructure, can take a lot of time. So it is recommended that inference as well be done using GPUs. The reason for this is, the prediction is being generated for each listing available in the file (as the number of listings increase, the time taken for inference can increase if it is run using only the CPU)
 
