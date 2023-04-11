@@ -1,4 +1,5 @@
 import torch.nn as nn
+import torch
 class NNHybridFiltering(nn.Module):
     
     def __init__(self, n_users, n_items, embedding_dim_users, embedding_dim_items, n_activations, rating_range):
@@ -17,7 +18,7 @@ class NNHybridFiltering(nn.Module):
         embeddings = torch.cat([embedded_users,embedded_items],dim=1)
         # Pass embeddings through network
         preds = self.fc1(embeddings)
-        preds = F.relu(preds)
+        preds = nn.functional.relu(preds)
         preds = self.fc2(preds)
         # Scale predicted ratings to target-range [low,high]
         preds = torch.sigmoid(preds) * (self.rating_range[1]-self.rating_range[0]) + self.rating_range[0]

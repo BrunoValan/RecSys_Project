@@ -13,19 +13,17 @@ from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import train_test_split
 from model_file import NNHybridFiltering
 
-device = torch.device("cpu")
 def load_data():
     df=pd.read_csv("reviews_airbnb.csv")
     return (df)
  
-def load_model(ratings,wt_file_path):
+def load_model(ratings,wt_file_path,device):
     # import fine tuned model
-    #X=load_data()
     n_users = ratings.loc[:,'reviewer_id'].max()+1
     n_items = ratings.loc[:,'id'].max()+1
     model = NNHybridFiltering(n_users,n_items,embedding_dim_users=50, embedding_dim_items=50,n_activations = 100,rating_range=[0.,5.])
     model=model.to(device)
-    model.load_state_dict(torch.load(wt_file_path))
+    model.load_state_dict(torch.load(wt_file_path,map_location=device))
     return (model)
     
 def predict_rating(model,reviewer_id,id, device):
@@ -48,7 +46,7 @@ def generate_recommendations(ratings1,X,model,reviewer_id,device):
     idxs = np.argsort(np.array(pred_ratings))[::-1]
     recs = ratings1.iloc[idxs]['id'].values.tolist()
     # Filter out places the user has already stayed at
-    places_stayed = X.loc[X['reviewer_id']==userId, 'id'].tolist()
+    places_stayed = X.loc[X['reviewer_id']==reviewer_id, 'id'].tolist()
     recs = [rec for rec in recs if not rec in places_stayed]
     # Filter to top 10 recommendations
     #recs = recs[:10]
@@ -65,11 +63,12 @@ def generate_recommendations(ratings1,X,model,reviewer_id,device):
     return recs_names
 
 if __name__ == "__main__":
+    device = torch.device("cpu")
     ratings = load_data()
     X = ratings.loc[:,['reviewer_id','id']]
     userId=1045
     path = 'best_model_weights.pth'
-    model1=load_model(ratings, path)
+    model1=load_model(ratings, path,device)
     recs = generate_recommendations(ratings,X,model1,userId,device)
     for i,rec in enumerate(recs):
         print('Recommendation {}: {}'.format(i,rec))
