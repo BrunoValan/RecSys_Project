@@ -15,6 +15,8 @@ b.listing_detail.csv: which contains specifics of the property, the amenities pr
 
 3. EDA showing the skewness of the data:
 
+![image](https://user-images.githubusercontent.com/110474064/231043705-f9ab2d5a-051a-460e-88e8-455b9b98e914.png)
+
 ![image](https://user-images.githubusercontent.com/110474064/231039384-5b7c67eb-419b-4494-87e7-d330b052b9f7.png)
 
 ![image](https://user-images.githubusercontent.com/110474064/231039478-7803546d-fd0e-4d49-b234-11ac8f778727.png)
@@ -52,3 +54,11 @@ Note: the inference takes time with CPU and thus the streamlit implementation ru
 Though the model convergence and the train and validation losses look promising, the algorithm rarely provides distinct recommendations, which brings into question the coverage of the recommendation system built using the algorithm. A couple of reasons for this can be the highly skewed number of reviews for a particular popular listing and the highly skewed positive ratings wrt the negative ones. To make this more robust, we would need subject matter experts to define a set of heuristics to determine the intrinsic appeal, so that we can modify the data accordingly and retrain the model.
 
 ## References:
+
+1. https://www.kaggle.com/datasets/arianazmoudeh/airbnbopendata :for data search
+
+2. https://www.kaggle.com/code/erikbruin/airbnb-the-amsterdam-story-with-interactive-maps/input?select=listings_details.csv : for basic EDA and understanding the data
+
+3. DCAR: Deep Collaborative Autoencoder for Recommendation with Implicit Feedback- Wang Jiong et. al : for the merits of the methodology chosen, concatenation vs dot product and the combination of the 2.
+
+4. https://github.com/AIPI540/AIPI540-Deep-Learning-Applications by Prof. Jon Reifschneider : for code reference
